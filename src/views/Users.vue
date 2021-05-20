@@ -22,14 +22,14 @@
               {{ user.employeeId }}
             </td>
             <td class="px-4 py-3">{{ user.firstName }} {{ user.lastName }}</td>
-            <td class="px-4 py-3">{{ user.sucursal }}</td>
-            <td class="px-4 py-3">{{ user.position }}</td>
+            <td class="px-4 py-3"></td>
+            <td class="px-4 py-3"></td>
             <!-- <td class="px-4 py-3">hola@gmail.com</td> -->
           </tr>
         </tbody>
       </table>
     </div>
-    <p>{{ orderAsc }}</p>
+    <!-- <p>{{ orderAsc }}</p> -->
   </div>
 </template>
 
@@ -46,18 +46,15 @@ export default {
   computed: {
     ...mapState(['userList', 'locations']),
     ...mapGetters(['orderAsc']),
-    // orderAsc() {
-    //   return this.userList.sort((a, b) => {
-    //     a.employeeId > b.employeeId;
-    //   });
-    // },
   },
   methods: {
     ...mapActions(['updateUsers', 'getLocations']),
   },
   created() {
-    this.updateUsers();
     this.getLocations();
+    this.updateUsers();
   },
+  // mounted() {
+  // },
 };
 </script>
