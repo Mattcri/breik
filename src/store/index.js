@@ -7,6 +7,7 @@ export default new Vuex.Store({
   state: {
     userList: null,
     branchOfficesList: null,
+    turnList: null,
     locations: null,
     positions: null,
     // users: null,
@@ -27,6 +28,9 @@ export default new Vuex.Store({
     },
     SET_BRANCH_OFFICE(state, newBrancOffices) {
       state.branchOfficesList = newBrancOffices.reverse();
+    },
+    SET_TURNS(state, newTurns) {
+      state.turnList = newTurns;
     },
     // SET_USERS_COMPLETE(state, newUsers) {
     //   state.users = newUsers;
@@ -64,12 +68,23 @@ export default new Vuex.Store({
                 user.position = state.positions.find(
                   (position) => position.id == positionId
                 );
-                user.total = state.locations.map((total) => {
-                  let idOne = 1;
-                  if (total.id == idOne) {
-                    return total.length;
-                  }
-                });
+
+                // user.location.hours = state.locations.map((hours) => {
+                //   let startTime = parseFloat(hours.startTime);
+                //   let endTime = parseFloat(hours.endTime);
+                //   if (endTime === 0) {
+                //     endTime = 24;
+                //   }
+                //   return Math.abs((startTime - endTime) * 5);
+                // });
+                // user.location.hours = () => {
+                //   let startTime = parseFloat(startTime);
+                //   let endTime = parseFloat(endTime);
+                //   if (endTime === 0) {
+                //     endTime = 24;
+                //   }
+                //   return Math.abs((startTime - endTime) * 5);
+                // };
 
                 return user;
               })
@@ -113,6 +128,19 @@ export default new Vuex.Store({
           .then((response) => response.json())
           .then((data) => {
             commit('SET_BRANCH_OFFICE', data);
+            resolve(data);
+          })
+          .catch((err) => {
+            reject(err);
+          });
+      });
+    },
+    getTurnsList({ commit }) {
+      return new Promise((resolve, reject) => {
+        fetch('http://localhost:3004/turnTemplates')
+          .then((response) => response.json())
+          .then((data) => {
+            commit('SET_TURNS', data);
             resolve(data);
           })
           .catch((err) => {
