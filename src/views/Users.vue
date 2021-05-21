@@ -25,12 +25,13 @@
             <td class="px-4 py-3">{{ user.firstName }} {{ user.lastName }}</td>
             <td class="px-4 py-3">{{ user.location.name }}</td>
             <td class="px-4 py-3">{{ user.position.name }}</td>
-            <td class="px-4 py-3"></td>
+            <td class="px-4 py-3 text-center">
+              {{ calcHours(user.location) }}
+            </td>
           </tr>
         </tbody>
       </table>
     </div>
-    <!-- <p>{{ calcHours }}</p> -->
   </div>
 </template>
 
@@ -60,14 +61,19 @@ export default {
   },
   methods: {
     ...mapActions(['updateUsers', 'getLocations', 'getPositions']),
+    calcHours: function ({ startTime, endTime }) {
+      startTime = parseFloat(startTime);
+      endTime = parseFloat(endTime);
+      if (endTime === 0) {
+        endTime = 24;
+      }
+      return Math.abs((startTime - endTime) * 5);
+    },
   },
   created() {
     Promise.all([this.getLocations(), this.getPositions(), this.updateUsers()]);
     // this.updateUsers().then(this.getLocations()).then(this.getPositions());
   },
-  // mounted() {
-  //   this.orderAsc();
-  // },
 };
 </script>
 

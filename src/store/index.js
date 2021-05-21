@@ -77,14 +77,6 @@ export default new Vuex.Store({
                 //   }
                 //   return Math.abs((startTime - endTime) * 5);
                 // });
-                // user.location.hours = () => {
-                //   let startTime = parseFloat(startTime);
-                //   let endTime = parseFloat(endTime);
-                //   if (endTime === 0) {
-                //     endTime = 24;
-                //   }
-                //   return Math.abs((startTime - endTime) * 5);
-                // };
 
                 return user;
               })
