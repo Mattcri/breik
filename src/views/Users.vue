@@ -9,7 +9,7 @@
             <th class="text-left uppercase px-4 py-3 text-sm">Nombre</th>
             <th class="text-left uppercase px-4 py-3 text-sm">Sucursales</th>
             <th class="text-left uppercase px-4 py-3 text-sm">Cargos</th>
-            <!-- <th class="uppercase px-4 py-3 text-sm">Horas</th> -->
+            <th class="uppercase px-4 py-3 text-sm">Horas/semana</th>
           </tr>
         </thead>
         <tbody class="bg-gray-100">
@@ -17,24 +17,25 @@
             v-for="(user, i) in userList"
             :key="i"
             :class="i % 2 == 0 ? 'bg-gray-200' : 'bg-gray-100'"
+            class="border-b-2 border-gray-400"
           >
-            <td class="px-4 py-3 border-b-2 border-gray-400">
+            <td class="px-4 py-3">
               {{ user.employeeId }}
             </td>
             <td class="px-4 py-3">{{ user.firstName }} {{ user.lastName }}</td>
+            <td class="px-4 py-3">{{ user.location.name }}</td>
+            <td class="px-4 py-3">{{ user.position.name }}</td>
             <td class="px-4 py-3"></td>
-            <td class="px-4 py-3"></td>
-            <!-- <td class="px-4 py-3">hola@gmail.com</td> -->
           </tr>
         </tbody>
       </table>
     </div>
-    <!-- <p>{{ orderAsc }}</p> -->
+    <!-- <p>{{ calcHours }}</p> -->
   </div>
 </template>
 
 <script>
-import { mapState, mapGetters, mapActions } from 'vuex';
+import { mapState, mapActions } from 'vuex';
 
 export default {
   name: 'ViewUser',
@@ -44,17 +45,34 @@ export default {
     };
   },
   computed: {
-    ...mapState(['userList', 'locations']),
-    ...mapGetters(['orderAsc']),
+    ...mapState(['userList', 'locations', 'positions']),
+    // calcHours() {
+    //   return this.userList.map((hours) => {
+    //     let startTime = parseFloat(hours.location.startTime);
+    //     let endTime = parseFloat(hours.location.endTime);
+    //     if (endTime === 0) {
+    //       endTime = 24;
+    //     }
+    //     return Math.abs(startTime - endTime);
+    //   });
+    // },
+    // ...mapGetters(['orderAsc']),
   },
   methods: {
-    ...mapActions(['updateUsers', 'getLocations']),
+    ...mapActions(['updateUsers', 'getLocations', 'getPositions']),
   },
   created() {
-    this.getLocations();
-    this.updateUsers();
+    Promise.all([this.getLocations(), this.getPositions(), this.updateUsers()]);
+    // this.updateUsers().then(this.getLocations()).then(this.getPositions());
   },
   // mounted() {
+  //   this.orderAsc();
   // },
 };
 </script>
+
+<style>
+table tbody tr:last-of-type {
+  border: none;
+}
+</style>

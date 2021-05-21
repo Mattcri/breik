@@ -6,11 +6,35 @@ Vue.use(Vuex);
 export default new Vuex.Store({
   state: {
     userList: null,
+    branchOfficesList: null,
     locations: null,
+    positions: null,
+    // users: null,
   },
   mutations: {
     SET_USERS(state, newUserList) {
       state.userList = newUserList.sort((a, b) => {
+        let numberA = parseFloat(a.employeeId);
+        let numberB = parseFloat(b.employeeId);
+        return numberA - numberB;
+      });
+    },
+    SET_LOCATIONS(state, newLocations) {
+      state.locations = newLocations;
+    },
+    SET_POSITIONS(state, newPositions) {
+      state.positions = newPositions;
+    },
+    SET_BRANCH_OFFICE(state, newBrancOffices) {
+      state.branchOfficesList = newBrancOffices.reverse();
+    },
+    // SET_USERS_COMPLETE(state, newUsers) {
+    //   state.users = newUsers;
+    // },
+  },
+  getters: {
+    orderAsc(state) {
+      return state.userList.sort((a, b) => {
         let numberA = parseFloat(a.employeeId);
         let numberB = parseFloat(b.employeeId);
         if (numberA < numberB) {
@@ -20,25 +44,6 @@ export default new Vuex.Store({
           return 1;
         }
         return 0;
-      });
-    },
-    SET_LOCATIONS(state, newLocations) {
-      state.locations = newLocations;
-    },
-  },
-  getters: {
-    orderAsc(state) {
-      return state.userList.sort((a, b) => {
-        let numberA = parseFloat(a.employeeId);
-        let numberB = parseFloat(b.employeeId);
-        return numberA - numberB;
-        // if (numberA < numberB) {
-        //   return -1;
-        // }
-        // if (numberA > numberB) {
-        //   return 1;
-        // }
-        // return 0;
       });
     },
   },
@@ -52,36 +57,19 @@ export default new Vuex.Store({
               'SET_USERS',
               data.map((user) => {
                 let locationId = user.locationId[0];
-                user.location = locationId;
-                user.sucursal = state.locations.find((sucursal) => {
-                  sucursal.id == user.location;
+                let positionId = user.positionId[0];
+                user.location = state.locations.find(
+                  (location) => location.id == locationId
+                );
+                user.position = state.positions.find(
+                  (position) => position.id == positionId
+                );
+                user.total = state.locations.map((total) => {
+                  let idOne = 1;
+                  if (total.id == idOne) {
+                    return total.length;
+                  }
                 });
-                // a.sucursal = a.locationId[0];
-                // a.position = a.positionId[0];
-
-                // if (a.sucursal === 1) {
-                //   a.sucursal = 'Ñuñoa';
-                // } else if (a.sucursal === 2) {
-                //   a.sucursal = 'Providencia';
-                // } else if (a.sucursal === 3) {
-                //   a.sucursal = 'Santiago';
-                // }
-
-                // if (a.position === 1) {
-                //   a.position = 'Copero/a';
-                // } else if (a.position === 2) {
-                //   a.position = 'Recepcionista';
-                // } else if (a.position === 3) {
-                //   a.position = 'Chef';
-                // } else if (a.position === 4) {
-                //   a.position = 'Garzón/a';
-                // } else if (a.position === 6) {
-                //   a.position = 'Barista';
-                // } else if (a.position === 7) {
-                //   a.position = 'Supervisor/a';
-                // } else if (a.position === 8) {
-                //   a.position = 'Aseo';
-                // }
 
                 return user;
               })
@@ -106,6 +94,39 @@ export default new Vuex.Store({
           });
       });
     },
+    getPositions({ commit }) {
+      return new Promise((resolve, reject) => {
+        fetch('http://localhost:3004/positions')
+          .then((response) => response.json())
+          .then((data) => {
+            commit('SET_POSITIONS', data);
+            resolve(data);
+          })
+          .catch((err) => {
+            reject(err);
+          });
+      });
+    },
+    getBranchOffices({ commit }) {
+      return new Promise((resolve, reject) => {
+        fetch('http://localhost:3004/locations')
+          .then((response) => response.json())
+          .then((data) => {
+            commit('SET_BRANCH_OFFICE', data);
+            resolve(data);
+          })
+          .catch((err) => {
+            reject(err);
+          });
+      });
+    },
+    // getUsersComplete({ commit, state }) {
+    //   return new Promise((resolve, reject) => {
+    //     state.userList.map((user) => {
+    //       user.hours =
+    //     });
+    //   });
+    // },
     // getLocations({ commit }) {
     //   return fetch('http://localhost:3004/locations')
     //     .then((response) => response.json())
