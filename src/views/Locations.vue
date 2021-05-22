@@ -29,7 +29,7 @@
               {{ branch.address1 }}, {{ branch.address2 }}
               {{ branch.commune }}
             </td>
-            <td class="px-4 py-3"></td>
+            <td class="px-4 py-3">{{ countUsers(branch.id) }}</td>
           </tr>
         </tbody>
       </table>
@@ -48,15 +48,30 @@ export default {
     };
   },
   computed: {
-    ...mapState(['branchOfficesList']),
+    ...mapState(['branchOfficesList', 'userList']),
   },
   methods: {
-    ...mapActions(['getBranchOffices', 'getLocations', 'getPositions']),
+    ...mapActions([
+      'getBranchOffices',
+      'getLocations',
+      'getPositions',
+      'updateUsers',
+    ]),
+    countUsers: function (branchId) {
+      let userIdCounter = 0;
+      this.userList.forEach((user) => {
+        if (user.locationId.indexOf(branchId) != -1) {
+          userIdCounter++;
+        }
+      });
+      return userIdCounter;
+    },
   },
   created() {
     Promise.all([
       this.getLocations(),
       this.getPositions(),
+      this.updateUsers(),
       this.getBranchOffices(),
     ]);
   },

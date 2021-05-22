@@ -10,7 +10,6 @@ export default new Vuex.Store({
     turnList: null,
     locations: null,
     positions: null,
-    // users: null,
   },
   mutations: {
     SET_USERS(state, newUserList) {
@@ -32,24 +31,21 @@ export default new Vuex.Store({
     SET_TURNS(state, newTurns) {
       state.turnList = newTurns;
     },
-    // SET_USERS_COMPLETE(state, newUsers) {
-    //   state.users = newUsers;
-    // },
   },
   getters: {
-    orderAsc(state) {
-      return state.userList.sort((a, b) => {
-        let numberA = parseFloat(a.employeeId);
-        let numberB = parseFloat(b.employeeId);
-        if (numberA < numberB) {
-          return -1;
-        }
-        if (numberA > numberB) {
-          return 1;
-        }
-        return 0;
-      });
-    },
+    // orderAsc(state) {
+    //   return state.userList.sort((a, b) => {
+    //     let numberA = parseFloat(a.employeeId);
+    //     let numberB = parseFloat(b.employeeId);
+    //     if (numberA < numberB) {
+    //       return -1;
+    //     }
+    //     if (numberA > numberB) {
+    //       return 1;
+    //     }
+    //     return 0;
+    //   });
+    // },
   },
   actions: {
     updateUsers({ commit, state }) {
@@ -68,15 +64,6 @@ export default new Vuex.Store({
                 user.position = state.positions.find(
                   (position) => position.id == positionId
                 );
-
-                // user.location.hours = state.locations.map((hours) => {
-                //   let startTime = parseFloat(hours.startTime);
-                //   let endTime = parseFloat(hours.endTime);
-                //   if (endTime === 0) {
-                //     endTime = 24;
-                //   }
-                //   return Math.abs((startTime - endTime) * 5);
-                // });
 
                 return user;
               })
@@ -140,21 +127,6 @@ export default new Vuex.Store({
           });
       });
     },
-    // getUsersComplete({ commit, state }) {
-    //   return new Promise((resolve, reject) => {
-    //     state.userList.map((user) => {
-    //       user.hours =
-    //     });
-    //   });
-    // },
-    // getLocations({ commit }) {
-    //   return fetch('http://localhost:3004/locations')
-    //     .then((response) => response.json())
-    //     .then((response) => {
-    //       commit('SET_LOCATIONS', response.data);
-    //     })
-    //     .catch((reject) => console.error(reject));
-    // },
   },
   modules: {},
 });

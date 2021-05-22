@@ -738,7 +738,7 @@
       "breakTime": 60,
       "notes": "",
       "position": 1,
-      "locations": [1, 2, 3]
+      "locationId": [1, 2, 3]
     }
   ],
   "turns": [

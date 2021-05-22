@@ -27,7 +27,11 @@
             <td class="px-4 py-3">{{ turn.checkOut }}</td>
             <td class="px-4 py-3">{{ turn.breakTime }} min</td>
             <td class="px-4 py-3">{{ workHours(turn) }} hrs</td>
-            <td class="px-4 py-3"></td>
+            <td class="px-4 py-3">
+              <p v-for="(name, i) in locationsName(turn.locationId)" :key="i">
+                {{ name }}
+              </p>
+            </td>
           </tr>
         </tbody>
       </table>
@@ -57,13 +61,20 @@ export default {
       let totalHours = checkOut - checkIn;
       return Math.abs(totalHours - breakTime);
     },
-    // locationsName: function ({ locationId }) {
-    //   this.locations.forEach((position) => {
-    //     position.find((id) => {
-    //       id.id == locationId;
-    //     });
-    //   });
-    // },
+    locationsName: function (locations) {
+      if (!locations) return;
+      let locationsWithNameArray = locations.map((elementId) => {
+        let locationsObject = this.locations.find((location) => {
+          return location.id == elementId;
+        });
+        return locationsObject.name;
+      });
+      if (locationsWithNameArray.length === 0) {
+        let ifEmty = ['No Asignado'];
+        return ifEmty;
+      }
+      return locationsWithNameArray;
+    },
   },
   created() {
     Promise.all([this.getLocations(), this.getTurnsList()]);
