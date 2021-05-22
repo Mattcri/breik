@@ -24,7 +24,14 @@
             </td>
             <td class="px-4 py-3">{{ user.firstName }} {{ user.lastName }}</td>
             <td class="px-4 py-3">{{ user.location.name }}</td>
-            <td class="px-4 py-3">{{ user.position.name }}</td>
+            <td class="px-4 py-3">
+              <p
+                v-for="(position, i) in positionsNames(user.positionId)"
+                :key="i"
+              >
+                {{ position }}
+              </p>
+            </td>
             <td class="px-4 py-3 text-center">
               {{ calcHours(user.location) }}
             </td>
@@ -69,10 +76,19 @@ export default {
       }
       return Math.abs((startTime - endTime) * 5);
     },
+    positionsNames: function (positions) {
+      if (!positions) return;
+      let positionsWithNameArray = positions.map((elementId) => {
+        let positionsObject = this.positions.find((position) => {
+          return position.id == elementId;
+        });
+        return positionsObject.name;
+      });
+      return positionsWithNameArray;
+    },
   },
   created() {
     Promise.all([this.getLocations(), this.getPositions(), this.updateUsers()]);
-    // this.updateUsers().then(this.getLocations()).then(this.getPositions());
   },
 };
 </script>
